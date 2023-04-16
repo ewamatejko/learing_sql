@@ -1,0 +1,2 @@
+# learing_sql
+ l
