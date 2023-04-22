@@ -77,8 +77,8 @@ ORDER BY 1,2;
 /*
 How can you produce a list of bookings on the day of 2012-09-14 which will cost the member (or guest) more than $30? Remember that guests have different costs to members (the listed costs are per half-hour 'slot'), and the guest user is always ID 0. Include in your output the name of the facility, the name of the member formatted as a single column, and the cost. Order by descending cost, and do not use any subqueries.
 */
-SELECT 	b.starttime, f.name,
-		CONCAT(m.firstname, ' ', m.surname), 
+SELECT 	b.starttime, f.name AS facility,
+		CONCAT(m.firstname, ' ', m.surname) AS fullname, 
 		CASE WHEN b.memid = 0 THEN (f.guestcost*b.slots)
 		ELSE (f.membercost*b.slots)
 		END AS totalcost
@@ -106,8 +106,25 @@ FROM members m
 ORDER BY member;
 
 -- ISSUE 8: Produce a list of costly bookings, using a subquery
+-- FROM SUBQUERY (temporary table with own names used in SELECT)
 /*
 How can you produce a list of bookings on the day of 2012-09-14 which will cost the member (or guest) more than $30? Remember that guests have different costs to members (the listed costs are per half-hour 'slot'), and the guest user is always ID 0. Include in your output the name of the facility, the name of the member formatted as a single column, and the cost. Order by descending cost.
 */
-
+SELECT facility,
+		fullname,
+		totalcost
+FROM (SELECT f.name AS facility, 
+	  CONCAT(m.firstname, ' ', m.surname) AS fullname,
+	  	CASE WHEN b.memid = 0 THEN (f.guestcost*b.slots)
+		ELSE (f.membercost*b.slots)
+		END AS totalcost
+		FROM bookings b
+		JOIN facilities f
+		USING (facid)
+		JOIN members m
+		USING (memid)
+		WHERE 	(b.starttime >= '2012-09-14' AND b.starttime < '2012-09-15')
+		)sub1
+WHERE totalcost > 30
+ORDER BY totalcost DESC;
 
