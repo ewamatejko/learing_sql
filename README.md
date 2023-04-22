@@ -132,6 +132,7 @@ ORDER BY totalcost DESC;
 -- INSERT DATA INTO TABLE --
 
 -- ISSUE 1:  Insert some data into a table
+-- INSERT INTO () VALUES ()
 /*
 The club is adding a new facility - a spa. We need to add it into the facilities table. Use the following values: facid: 9, Name: 'Spa', membercost: 20, guestcost: 30, initialoutlay: 100000, monthlymaintenance: 800.
 */
@@ -148,24 +149,51 @@ VALUES 			(9,
 			30,
 			100000,
 			800);
+			
 
 -- ISSUE 2: Insert multiple rows of data into a table
+-- INSERT INTO SELECT UNION (removes duplicates) SELECT
 /*
 Add multiple facilities in one command. Use the following values:
-facid: 9, Name: 'Spa', membercost: 20, guestcost: 30, initialoutlay: 100000, monthlymaintenance: 800. facid: 10, Name: 'Squash Court 2', membercost: 3.5, guestcost: 17.5, initialoutlay: 5000, monthlymaintenance: 80.
+facid: 11, Name: 'Spa', membercost: 20, guestcost: 30, initialoutlay: 100000, monthlymaintenance: 800. facid: 10, Name: 'Squash Court 2', membercost: 3.5, guestcost: 17.5, initialoutlay: 5000, monthlymaintenance: 80.
 */
+INSERT INTO facilities (facid, 
+			name,
+			membercost, 
+			guestcost, 
+			initialoutlay, 
+			monthlymaintenance)
+SELECT 		10, 'Squash Court 2', 3.5, 17.5, 5000, 80
+UNION
+SELECT 		11, 'Spa', 20, 30, 100000, 800;
+
 
 -- ISSUE 3: Insert calculated data into a table
+-- INSERT INTO, SUBQUERY IN SELECT !!
 
  /*
  We want to automatically generate the value for the next facid, rather than specifying it as a constant. Use the following values for everything else:
 Name: 'Spa', membercost: 20, guestcost: 30, initialoutlay: 100000, monthlymaintenance: 800.
 */
+INSERT INTO facilities (facid, 
+			name,
+			membercost, 
+			guestcost, 
+			initialoutlay, 
+			monthlymaintenance)
+SELECT (SELECT MAX(facid) FROM facilities)+1, 'Spa,', 20, 30, 100000, 800;
+
 
 -- ISSUE 4: Update some existing data
+-- UPDATE SET WHERE 
+
 /*
-We made a mistake when entering the data for the second tennis court. The initial outlay was 10000 rather than 8000: you need to alter the data to fix the error.
+We made a mistake when entering the data for the facid 12 (Spa, instead of Spa). You need to alter the data to fix the error.
 */
+UPDATE facilities
+SET name = 'Spa'
+WHERE facid = 12;
+			
 
 -- ISSUE 5: Update multiple rows and columns at the same time
 /*
