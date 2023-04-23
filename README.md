@@ -196,29 +196,77 @@ WHERE facid = 12;
 			
 
 -- ISSUE 5: Update multiple rows and columns at the same time
+-- UPDATE SET WHERE
 /*
 We want to increase the price of the tennis courts for both members and guests. Update the costs to be 6 for members, and 30 for guests.
 */
+UPDATE facilities
+SET membercost = 6, guestcost = 30
+WHERE name IN ('Tennis Court 1', 'Tennis Court 2');
+
 
 -- ISSUE 6: Update a row based on the contents of another row
+-- UPDATE SET WHERE
 /*
 We want to alter the price of the second tennis court so that it costs 10% more than the first one. Try to do this without using constant values for the prices, so that we can reuse the statement if we want to.
 */
+UPDATE facilities
+SET membercost = 1.1*(SELECT membercost
+				 FROM facilities
+				 WHERE name = 'Tennis Court 1'),
+	guestcost = 1.1*(SELECT guestcost
+				 FROM facilities
+				 WHERE name = 'Tennis Court 1')
+WHERE name = 'Tennis Court 2';
+
 
 -- ISSUE 7: Delete all bookings
+-- DELETE FROM
 */
 As part of a clearout of our database, we want to delete all bookings from the cd.bookings table. How can we accomplish this?
 */
+DELETE FROM bookings;
+
 
 -- ISSUE 8: Delete a member from the cd.members table
+-- DELETE FROM WHERE
 */
 We want to remove member 37, who has never made a booking, from our database. How can we achieve that?
 */
+DELETE FROM members 
+WHERE memid = 37;
+
+~~NOTE: update or delete a record in the "members" table that has a foreign key relationship with the "bookings" table is not possible, because there is at least one record in the "bookings" table that still references the record in the "members" table that you are trying to delete or update.
 
 -- ISSUE 9: Delete based on a subquery
 */
 In our previous exercises, we deleted a specific member who had never made a booking. How can we make that more general, to delete all members who have never made a booking?
 */
+
+-- DIFFERENCE BETWEEN 'TRUNCATE', 'DELETE' and 'DROP'
+
+In SQL, TRUNCATE and DELETE are two different commands used to remove data from a table. However, there are some significant differences between them.
+
+TRUNCATE is a DDL (Data Definition Language) command that deletes all the rows from a table, and it is faster than DELETE as it deallocates the data pages from the table. The TRUNCATE operation is not TRANSACTIONAL, and it cannot be rolled back. Additionally, it resets the identity column value to its seed value.
+
+DELETE, on the other hand, is a DML (Data Manipulation Language) command that removes specific rows from a table based on a condition or all rows without a condition. The DELETE operation is transactional, and it can be rolled back. Additionally, it does not reset the identity column value.
+
+DROP deletes an entire table from the database schema, including all data, indexes, and triggers associated with the table. DROP is a DDL command that is not transactional, and it cannot be rolled back. Once you drop a table, it is permanently deleted from the database schema.
+
+In summary, if you want to remove all rows from a table and reset the identity column value, you can use TRUNCATE. If you want to remove specific rows or roll back the operation, you should use DELETE. If you want to remove an entire table and all data associated with it, you should use DROP.
+
+TRANSACTIONAL
+In the context of databases, a transaction is a sequence of one or more database operations that are treated as a single logical unit of work. These operations can include inserting, updating, or deleting data from one or more tables.
+
+A transaction is considered transactional when it has the following properties, often referred to as ACID properties:
+
+Atomicity: A transaction is an atomic unit of work, meaning that it must be executed as a single, indivisible operation. If any part of the transaction fails, the entire transaction is rolled back, and all changes made during the transaction are undone, so that the database is returned to its original state.
+
+Consistency: A transaction must ensure that the database remains in a valid state after it has been completed, meaning that any integrity constraints, such as foreign key or check constraints, are satisfied.
+
+Isolation: A transaction must be isolated from other transactions that are executing concurrently, so that each transaction appears to be executed in isolation from others, even though they are actually executing concurrently.
+
+Durability: Once a transaction has been committed, its changes must be durable and must survive any subsequent system failures, such as power outages, hardware failures, or other types of crashes.
 
 -- AGGREGATION --
 
