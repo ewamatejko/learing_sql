@@ -353,19 +353,140 @@ ORDER BY 1,2;
 */
 Find the total number of members (including guests) who have made at least one booking.
 */
+SELECT COUNT(DISTINCT(memid))
+FROM bookings;
+
 
 -- ISSUE 8: List facilities with more than 1000 slots booked
+-- HAVING, GROUP BY
 */
 Produce a list of facilities with more than 1000 slots booked. Produce an output table consisting of facility id and slots, sorted by facility id.
 */
+SELECT facid, SUM(slots)
+FROM bookings
+GROUP BY 1
+HAVING SUM(slots)>1000
+ORDER BY facid;
 
 -- ISSUE 9: Find the total revenue of each facility
 */
 Produce a list of facilities along with their total revenue. The output table should consist of facility name and revenue, sorted by revenue. Remember that there's a different cost for guests and members!
 */
+SELECT sub1.name, SUM(sub1.revenue)
+FROM (SELECT f.name, f.facid, 
+	  CASE WHEN b.memid != 0 THEN (f.membercost*b.slots)
+		ELSE f.guestcost*b.slots
+		END AS revenue
+		FROM bookings b
+		JOIN facilities f
+		USING (facid))sub1
+GROUP BY 1
+ORDER BY 2;
 
 
 -- ISSUE 10: Find facilities with a total revenue less than 1000
 */
 Produce a list of facilities with a total revenue less than 1000. Produce an output table consisting of facility name and revenue, sorted by revenue. Remember that there's a different cost for guests and members!
+*/
+SELECT sub1.name, SUM(sub1.revenue)
+FROM (SELECT f.name, f.facid, 
+	  CASE WHEN b.memid != 0 THEN (f.membercost*b.slots)
+		ELSE f.guestcost*b.slots
+		END AS revenue
+		FROM bookings b
+		JOIN facilities f
+		USING (facid))sub1
+GROUP BY 1
+HAVING SUM(sub1.revenue) < 1000
+ORDER BY 2;
+
+-- ISSUE 11: Output the facility id that has the highest number of slots booked
+/*
+Output the facility id that has the highest number of slots booked. For bonus points, try a version without a LIMIT clause. This version will probably look messy!
+*/
+SELECT facid, SUM(slots)
+FROM bookings
+GROUP BY facid
+ORDER BY 2 DESC
+LIMIT 1;
+
+
+-- ISSUE 12: List the total slots booked per facility per month, part 2
+/*
+Produce a list of the total number of slots booked per facility per month in the year of 2012. In this version, include output rows containing totals for all months per facility, and a total for all months for all facilities. The output table should consist of facility id, month and slots, sorted by the id and month. When calculating the aggregated values for all months and all facids, return null values in the month and facid columns.
+*/
+
+-- ISSUE 13: List the total hours booked per named facility
+/*
+Produce a list of the total number of hours booked per facility, remembering that a slot lasts half an hour. The output table should consist of the facility id, name, and hours booked, sorted by facility id. Try formatting the hours to two decimal places.
+*/
+
+-- ISSUE 14: List each member's first booking after September 1st 2012
+/*
+Produce a list of each member name, id, and their first booking after September 1st 2012. Order by member ID.
+*/
+
+-- ISSUE 15: Produce a list of member names, with each row containing the total member count
+/*
+Produce a list of member names, with each row containing the total member count. Order by join date, and include guest members.
+*/
+
+-- ISSUE 16: Produce a numbered list of members
+/*
+Produce a monotonically increasing numbered list of members (including guests), ordered by their date of joining. Remember that member IDs are not guaranteed to be sequential.
+*/
+
+-- ISSUE 17: Output the facility id that has the highest number of slots booked, again
+/*
+Output the facility id that has the highest number of slots booked. Ensure that in the event of a tie, all tieing results get output.
+*/
+
+-- ISSUE 18: Rank members by (rounded) hours used
+/*
+Produce a list of members (including guests), along with the number of hours they've booked in facilities, rounded to the nearest ten hours. Rank them by this rounded figure, producing output of first name, surname, rounded hours, rank. Sort by rank, surname, and first name.
+*/
+
+-- ISSUE 19: Find the top three revenue generating facilities
+/*
+Produce a list of the top three revenue generating facilities (including ties). Output facility name and rank, sorted by rank and facility name.
+*/
+
+-- ISSUE 20: Classify facilities by value
+/*
+Classify facilities into equally sized groups of high, average, and low based on their revenue. Order by classification and facility name.
+*/
+
+-- ISSUE 21: Calculate the payback time for each facility
+/*
+Based on the 3 complete months of data so far, calculate the amount of time each facility will take to repay its cost of ownership. Remember to take into account ongoing monthly maintenance. Output facility name and payback time in months, order by facility name. Don't worry about differences in month lengths, we're only looking for a rough value here!
+*/
+
+-- ISSUE 22: Calculate a rolling average of total revenue
+/*
+For each day in August 2012, calculate a rolling average of total revenue over the previous 15 days. Output should contain date and revenue columns, sorted by the date. Remember to account for the possibility of a day having zero revenue. This one's a bit tough, so don't be afraid to check out the hint!
+*/
+
+-- ISSUE 23:
+/*
+
+*/
+
+-- ISSUE
+/*
+
+*/
+
+-- ISSUE
+/*
+
+*/
+
+-- ISSUE
+/*
+
+*/
+
+-- ISSUE
+/*
+
 */
