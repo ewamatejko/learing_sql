@@ -242,6 +242,9 @@ WHERE memid = 37;
 */
 In our previous exercises, we deleted a specific member who had never made a booking. How can we make that more general, to delete all members who have never made a booking?
 */
+DELETE FROM members
+WHERE memid NOT IN (SELECT memid 
+		FROM bookings);
 
 -- DIFFERENCE BETWEEN 'TRUNCATE', 'DELETE' and 'DROP'
 
@@ -270,12 +273,86 @@ Durability: Once a transaction has been committed, its changes must be durable a
 
 -- AGGREGATION --
 
--- ISSUE 1:
+-- ISSUE 1: Count the number of facilities
+*/
+For our first foray into aggregates, we're going to stick to something simple. We want to know how many facilities exist - simply produce a total count.
+*/
+SELECT COUNT(DISTINCT(facid))
+FROM facilities;
+
+~~NOTE: 
+COUNT(*) simply returns the number of rows
+COUNT(address) counts the number of non-null addresses in the result set.
+COUNT(DISTINCT address) counts the number of different addresses in the facilities table.
+
+
+-- ISSUE 2: Count the number of expensive facilities
+*/
+Produce a count of the number of facilities that have a cost to guests of 10 or more.
+*/
+SELECT COUNT(facid)
+FROM facilities
+WHERE guestcost >=10;
+
+
+-- ISSUE 3: Count the number of recommendations each member makes.
+-- SUBQUERY IN FROM, CASE WHEN, SUBSTITUTING NULL BY INTEGER
+*/
+Produce a count of the number of recommendations each member has made. Order by member ID.
+*/
+SELECT sub1.recommendedby_v1, COUNT(sub1.recommendedby_v1) 
+FROM 	(SELECT CASE WHEN recommendedby IS NULL
+		THEN 0
+		ELSE recommendedby
+		END AS recommendedby_v1
+		FROM members)sub1
+GROUP BY sub1.recommendedby_v1
+ORDER BY 1;
+
+
+-- ISSUE 4: List the total slots booked per facility
+*/
+Produce a list of the total number of slots booked per facility. For now, just produce an output table consisting of facility id and slots, sorted by facility id.
+*/
+SELECT facid, SUM(slots) AS total_slots
+FROM bookings
+GROUP BY facid
+ORDER BY 1;
+
+
+-- ISSUE 5: List the total slots booked per facility in a given month
+*/
+Produce a list of the total number of slots booked per facility in the month of September 2012. Produce an output table consisting of facility id and slots, sorted by the number of slots.
+*/
+SELECT facid, SUM(slots) AS total_slots
+FROM bookings
+WHERE starttime >= '2012-09-01' AND starttime < '2012-10-01'
+GROUP BY facid
+ORDER BY 2;
+
+
+-- ISSUE 6: List the total slots booked per facility per month
+*/
+Produce a list of the total number of slots booked per facility per month in the year of 2012. Produce an output table consisting of facility id and slots, sorted by the id and month.
 */
 
+-- ISSUE 7: Find the count of members who have made at least one booking
+*/
+Find the total number of members (including guests) who have made at least one booking.
 */
 
--- ISSUE
+-- ISSUE 8: List facilities with more than 1000 slots booked
+*/
+Produce a list of facilities with more than 1000 slots booked. Produce an output table consisting of facility id and slots, sorted by facility id.
 */
 
+-- ISSUE 9: Find the total revenue of each facility
+*/
+Produce a list of facilities along with their total revenue. The output table should consist of facility name and revenue, sorted by revenue. Remember that there's a different cost for guests and members!
+*/
+
+
+-- ISSUE 10: Find facilities with a total revenue less than 1000
+*/
+Produce a list of facilities with a total revenue less than 1000. Produce an output table consisting of facility name and revenue, sorted by revenue. Remember that there's a different cost for guests and members!
 */
