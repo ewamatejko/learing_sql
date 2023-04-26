@@ -236,7 +236,7 @@ We want to remove member 37, who has never made a booking, from our database. Ho
 DELETE FROM members 
 WHERE memid = 37;
 
-~~NOTE: update or delete a record in the "members" table that has a foreign key relationship with the "bookings" table is not possible, because there is at least one record in the "bookings" table that still references the record in the "members" table that you are trying to delete or update.
+~NOTE: update or delete a record in the "members" table that has a foreign key relationship with the "bookings" table is not possible, because there is at least one record in the "bookings" table that still references the record in the "members" table that you are trying to delete or update.
 
 -- ISSUE 9: Delete based on a subquery
 */
@@ -280,7 +280,7 @@ For our first foray into aggregates, we're going to stick to something simple. W
 SELECT COUNT(DISTINCT(facid))
 FROM facilities;
 
-~~NOTE: 
+~NOTE: 
 COUNT(*) simply returns the number of rows
 COUNT(address) counts the number of non-null addresses in the result set.
 COUNT(DISTINCT address) counts the number of different addresses in the facilities table.
@@ -332,9 +332,22 @@ ORDER BY 2;
 
 
 -- ISSUE 6: List the total slots booked per facility per month
+-- EXTRACT, DATE_TRUNC 
 */
 Produce a list of the total number of slots booked per facility per month in the year of 2012. Produce an output table consisting of facility id and slots, sorted by the id and month.
 */
+SELECT 	facid, DATE_TRUNC('month', starttime) AS month, 
+		SUM(slots) AS total_slots
+FROM bookings
+GROUP BY 1,2
+ORDER BY 1,2;
+
+SELECT 	facid, EXTRACT(month FROM starttime) AS month, 
+		SUM(slots) AS total_slots
+FROM bookings
+GROUP BY 1,2
+ORDER BY 1,2;
+
 
 -- ISSUE 7: Find the count of members who have made at least one booking
 */
