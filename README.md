@@ -482,34 +482,55 @@ For each day in August 2012, calculate a rolling average of total revenue over t
 -- DATE --
 
 -- ISSUE 1: Produce a timestamp for 1 a.m. on the 31st of August 2012
+-- TIMESTAMP (date+time), CAST
 /*
 Produce a timestamp for 1 a.m. on the 31st of August 2012.
 */
+SELECT '2012-08-31 01:00:00' ::TIMESTAMP;
+
+-- NOTE: The CAST() function converts a value (of any type) into the specified datatype.
 
 -- ISSUE 2: Subtract timestamps from each other
+-- INTERVAL (BETWEEN TIMESTAMPS)
 /*
 Find the result of subtracting the timestamp '2012-07-30 01:00:00' from the timestamp '2012-08-31 01:00:00'
 */
+SELECT TIMESTAMP '2012-08-31 01:00:00' - TIMESTAMP '2012-07-30 01:00:00' AS interval;
+
 
 -- ISSUE 3: Generate a list of all the dates in October 2012
+-- GENERATE_SERIES
 /*
 Produce a list of all the dates in October 2012. They can be output as a timestamp (with time set to midnight) or a date.
 */
+SELECT GENERATE_SERIES (timestamp '2012-10-01', timestamp '2012-10-31', interval '1 day') AS list_dates;
+
+-- NOTE:  GENERATE_SERIES: This function allows you to generate a list of dates or numbers, specifying a start, an end, and an increment value
+
 
 -- ISSUE 4: Get the day of the month from a timestamp
+-- EXTRACT (TIMESTAMP TO INTEGER)
 /*
 Get the day of the month from the timestamp '2012-08-31' as an integer.
 */
+SELECT EXTRACT (day FROM timestamp '2012-08-31');
+
 
 -- ISSUE 5: Work out the number of seconds between timestamps
+-- EXTRACT EPOCH
 /*
 Work out the number of seconds between the timestamps '2012-08-31 01:00:00' and '2012-09-02 00:00:00'
 */
+SELECT EXTRACT (EPOCH FROM (TIMESTAMP '2012-09-02 00:00:00' - '2012-08-31 01:00:00'));
+
+-- NOTE: EXTRACT EPOCH -Extracting the epoch converts an interval or timestamp into a number of seconds
+
 
 -- ISSUE 6: Work out the number of days in each month of 2012
 /*
 For each month of the year in 2012, output the number of days in that month. Format the output as an integer column containing the month of the year, and a second column containing an interval data type.
 */
+
 
 -- ISSUE 7: Work out the number of days remaining in the month
 /*
