@@ -385,6 +385,8 @@ ORDER BY 2;
 
 
 -- ISSUE 10: Find facilities with a total revenue less than 1000
+-- WITH SUBQUERY, CASE WHEN, GROUP BY...
+
 */
 Produce a list of facilities with a total revenue less than 1000. Produce an output table consisting of facility name and revenue, sorted by revenue. Remember that there's a different cost for guests and members!
 */
@@ -409,6 +411,16 @@ FROM bookings
 GROUP BY facid
 ORDER BY 2 DESC
 LIMIT 1;
+
+!!! OPTION WITH 'WITH' !!!
+
+WITH sum_slots AS (SELECT facid, SUM(slots) as total_slots
+		FROM bookings
+		GROUP BY facid)
+SELECT facid, total_slots
+FROM sum_slots
+WHERE total_slots = (SELECT MAX(total_slots) 
+			FROM sum_slots);
 
 
 -- ISSUE 12: List the total slots booked per facility per month, part 2
@@ -466,27 +478,177 @@ Based on the 3 complete months of data so far, calculate the amount of time each
 For each day in August 2012, calculate a rolling average of total revenue over the previous 15 days. Output should contain date and revenue columns, sorted by the date. Remember to account for the possibility of a day having zero revenue. This one's a bit tough, so don't be afraid to check out the hint!
 */
 
--- ISSUE 23:
+
+-- DATE --
+
+-- ISSUE 1: Produce a timestamp for 1 a.m. on the 31st of August 2012
+/*
+Produce a timestamp for 1 a.m. on the 31st of August 2012.
+*/
+
+-- ISSUE 2: Subtract timestamps from each other
+/*
+Find the result of subtracting the timestamp '2012-07-30 01:00:00' from the timestamp '2012-08-31 01:00:00'
+*/
+
+-- ISSUE 3: Generate a list of all the dates in October 2012
+/*
+Produce a list of all the dates in October 2012. They can be output as a timestamp (with time set to midnight) or a date.
+*/
+
+-- ISSUE 4: Get the day of the month from a timestamp
+/*
+Get the day of the month from the timestamp '2012-08-31' as an integer.
+*/
+
+-- ISSUE 5: Work out the number of seconds between timestamps
+/*
+Work out the number of seconds between the timestamps '2012-08-31 01:00:00' and '2012-09-02 00:00:00'
+*/
+
+-- ISSUE 6: Work out the number of days in each month of 2012
+/*
+For each month of the year in 2012, output the number of days in that month. Format the output as an integer column containing the month of the year, and a second column containing an interval data type.
+*/
+
+-- ISSUE 7: Work out the number of days remaining in the month
+/*
+For any given timestamp, work out the number of days remaining in the month. The current day should count as a whole day, regardless of the time. Use '2012-02-11 01:00:00' as an example timestamp for the purposes of making the answer. Format the output as a single interval value.
+*/
+
+-- ISSUE 8: Work out the end time of bookings
+/*
+Return a list of the start and end time of the last 10 bookings (ordered by the time at which they end, followed by the time at which they start) in the system.
+*/
+
+-- ISSUE 9: Return a count of bookings for each month
+/*
+Return a count of bookings for each month, sorted by month
+*/
+
+-- ISSUE 10: Work out the utilisation percentage for each facility by month
+/*
+Work out the utilisation percentage for each facility by month, sorted by name and month, rounded to 1 decimal place. Opening time is 8am, closing time is 8.30pm. You can treat every month as a full month, regardless of if there were some dates the club was not open.
+*/
+
+
+-- STRING OPERATIONS --
+
+-- ISSUE 1: Format the names of members
+/*
+Output the names of all members, formatted as 'Surname, Firstname'
+*/
+
+
+-- ISSUE 2: Find facilities by a name prefix
+/*
+Find all facilities whose name begins with 'Tennis'. Retrieve all columns.
+*/
+
+-- ISSUE 3: Perform a case-insensitive search
+/*
+Perform a case-insensitive search to find all facilities whose name begins with 'tennis'. Retrieve all columns.
+*/
+
+-- ISSUE 4: Find telephone numbers with parentheses
+/*
+You've noticed that the club's member table has telephone numbers with very inconsistent formatting. You'd like to find all the telephone numbers that contain parentheses, returning the member ID and telephone number sorted by member ID.
+*/
+
+
+-- ISSUE 5: Pad zip codes with leading zeroes
+/*
+The zip codes in our example dataset have had leading zeroes removed from them by virtue of being stored as a numeric type. Retrieve all zip codes from the members table, padding any zip codes less than 5 characters long with leading zeroes. Order by the new zip code.
+*/
+
+-- ISSUE 6: Count the number of members whose surname starts with each letter of the alphabet
+/*
+You'd like to produce a count of how many members you have whose surname starts with each letter of the alphabet. Sort by the letter, and don't worry about printing out a letter if the count is 0.
+*/
+
+-- ISSUE 7: Clean up telephone numbers
+/*
+The telephone numbers in the database are very inconsistently formatted. You'd like to print a list of member ids and numbers that have had '-','(',')', and ' ' characters removed. Order by member id.
+*/
+
+-- RECURSIVE QUERIES --
+
+-- ISSUE 1: Find the upward recommendation chain for member ID 27
+/*
+Find the upward recommendation chain for member ID 27: that is, the member who recommended them, and the member who recommended that member, and so on. Return member ID, first name, and surname. Order by descending member id.
+*/
+
+-- ISSUE 2: Find the downward recommendation chain for member ID 1
+/*
+Find the downward recommendation chain for member ID 1: that is, the members they recommended, the members those members recommended, and so on. Return member ID and name, and order by ascending member id.
+*/
+
+-- ISSUE 3: Produce a CTE that can return the upward recommendation chain for any member
+/*
+Produce a CTE that can return the upward recommendation chain for any member. You should be able to select recommender from recommenders where member=x. Demonstrate it by getting the chains for members 12 and 22. Results table should have member and recommender, ordered by member ascending, recommender descending.
+*/
+
+-- ISSUE 
 /*
 
 */
 
--- ISSUE
+-- ISSUE 
 /*
 
 */
 
--- ISSUE
+-- ISSUE 
 /*
 
 */
 
--- ISSUE
+-- ISSUE 
 /*
 
 */
 
--- ISSUE
+-- ISSUE 
+/*
+
+*/
+
+-- ISSUE 
+/*
+
+*/
+
+-- ISSUE 
+/*
+
+*/
+
+-- ISSUE 
+/*
+
+*/
+
+-- ISSUE 
+/*
+
+*/
+
+-- ISSUE 
+/*
+
+*/
+
+-- ISSUE 
+/*
+
+*/
+
+-- ISSUE 
+/*
+
+*/
+
+-- ISSUE 
 /*
 
 */
