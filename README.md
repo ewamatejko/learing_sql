@@ -527,15 +527,29 @@ SELECT EXTRACT (EPOCH FROM (TIMESTAMP '2012-09-02 00:00:00' - '2012-08-31 01:00:
 
 
 -- ISSUE 6: Work out the number of days in each month of 2012
+-- EXTRACT, GENERATE_SERIES, INTERVAL
 /*
 For each month of the year in 2012, output the number of days in that month. Format the output as an integer column containing the month of the year, and a second column containing an interval data type.
 */
+SELECT EXTRACT (month FROM sub1.time_month) AS month_number,
+		((sub1.time_month + interval '1 month') - sub1.time_month) AS days_number
+FROM (SELECT GENERATE_SERIES (timestamp '2012-01-01', 
+	timestamp '2012-12-31', 
+	interval '1 month') AS time_month) sub1;
+
+-- NOTE: subtracting two timestamps will always produce an interval in terms of days (or portions of a day). You won't just get an answer in terms of months or years, because the length of those time periods is variable.
+-- NOTE: no need of using data from my database to operate on the calendar days!
 
 
 -- ISSUE 7: Work out the number of days remaining in the month
+-- DATE_TRUNC, INTERVAL
 /*
 For any given timestamp, work out the number of days remaining in the month. The current day should count as a whole day, regardless of the time. Use '2012-02-11 01:00:00' as an example timestamp for the purposes of making the answer. Format the output as a single interval value.
 */
+SELECT ((DATE_TRUNC ('month', sub1.current_date) + interval '1 month')
+		- DATE_TRUNC ('day', sub1.current_date)) AS days_remaining
+FROM (SELECT timestamp '2012-02-11' AS current_date) sub1;
+
 
 -- ISSUE 8: Work out the end time of bookings
 /*
