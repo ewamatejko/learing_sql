@@ -552,20 +552,46 @@ FROM (SELECT timestamp '2012-02-11' AS current_date) sub1;
 
 
 -- ISSUE 8: Work out the end time of bookings
+-- INTERVAL
 /*
 Return a list of the start and end time of the last 10 bookings (ordered by the time at which they end, followed by the time at which they start) in the system.
 */
+SELECT (starttime + interval '0.5 hour'*slots) AS endtime,
+		starttime
+FROM bookings
+ORDER BY 1 DESC, 2 DESC
+LIMIT 10;
+
 
 -- ISSUE 9: Return a count of bookings for each month
+-- DATE_TRUNC, COUNT, GROUP BY
 /*
 Return a count of bookings for each month, sorted by month
 */
+SELECT DATE_TRUNC ('month', starttime) as time,
+	COUNT(bookid)
+FROM bookings
+GROUP BY 1 
+ORDER BY 1;
 
 -- ISSUE 10: Work out the utilisation percentage for each facility by month
 /*
 Work out the utilisation percentage for each facility by month, sorted by name and month, rounded to 1 decimal place. Opening time is 8am, closing time is 8.30pm. You can treat every month as a full month, regardless of if there were some dates the club was not open.
 */
-
+with errors!
+SELECT sub1.facid, sub1.name, sub1.month_date, ROUND((sum_slots/monthlyslots*100),1) AS utilisation
+FROM ((SELECT facid, f.name, sub1.month_date, sub1.sum_slots,	
+		CAST(25*(CAST((month_date + interval '1 month') AS date)
+		- CAST(month_date AS date)) AS numeric),1) AS monthlyslots  
+		FROM (SELECT facid, DATE_TRUNC ('month', starttime) AS month_date,
+		SUM(slots) AS sum_slots
+		FROM bookings
+		JOIN facilities f
+	  	USING (facid)
+		GROUP BY 1, 2, 3, 4
+		ORDER BY 1, 2))sub1
+ORDER BY 1;
+with errors!!!
 
 -- STRING OPERATIONS --
 
@@ -573,6 +599,8 @@ Work out the utilisation percentage for each facility by month, sorted by name a
 /*
 Output the names of all members, formatted as 'Surname, Firstname'
 */
+
+-- NOTE: Subtracting date types gives us an integer number of days !!!
 
 
 -- ISSUE 2: Find facilities by a name prefix
